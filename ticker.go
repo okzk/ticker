@@ -9,7 +9,7 @@ type Ticker struct {
 	c chan bool
 }
 
-func NewTicker(duration time.Duration, callback func(time.Time)) *Ticker {
+func New(duration time.Duration, callback func(time.Time)) *Ticker {
 	t := time.NewTicker(duration)
 	c := make(chan bool)
 	go func() {

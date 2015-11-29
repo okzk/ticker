@@ -9,7 +9,7 @@ import (
 
 func TestNumGoroutine(t *testing.T) {
 	for i := 0; i < 1000; i++ {
-		NewTicker(time.Millisecond, func(_ time.Time) {}).Stop()
+		New(time.Millisecond, func(_ time.Time) {}).Stop()
 	}
 
 	time.Sleep(10 * time.Millisecond)
@@ -20,7 +20,7 @@ func TestNumGoroutine(t *testing.T) {
 }
 
 func ExampleTicker() {
-	t := NewTicker(10*time.Millisecond, func(_ time.Time) {
+	t := New(10*time.Millisecond, func(_ time.Time) {
 		fmt.Println("ticked")
 	})
 
