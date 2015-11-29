@@ -19,7 +19,7 @@ import (
 
 func main() {
 	ticker := ticker.New(10*time.Millisecond, func(t time.Time) {
-		fmt.Println("ticke at", t)
+		fmt.Println("tick at", t)
 	})
 
 	time.Sleep(35 * time.Millisecond)
