@@ -1,32 +1,39 @@
 package ticker
 
 import (
+	"sync"
 	"time"
 )
 
 type Ticker struct {
-	t *time.Ticker
-	c chan bool
+	t  *time.Ticker
+	c  chan bool
+	wg sync.WaitGroup
 }
 
 func New(duration time.Duration, callback func(time.Time)) *Ticker {
-	t := time.NewTicker(duration)
-	c := make(chan bool)
+	ticker := &Ticker{
+		t: time.NewTicker(duration),
+		c: make(chan bool),
+	}
+
+	ticker.wg.Add(1)
 	go func() {
+		defer ticker.wg.Done()
 		for {
 			select {
-			case arg := <-t.C:
-				callback(arg)
-			case <-c:
+			case t := <-ticker.t.C:
+				callback(t)
+			case <-ticker.c:
 				return
 			}
 		}
 	}()
-
-	return &Ticker{t: t, c: c}
+	return ticker
 }
 
 func (t *Ticker) Stop() {
 	t.t.Stop()
 	close(t.c)
+	t.wg.Wait()
 }

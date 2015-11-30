@@ -12,8 +12,6 @@ func TestNumGoroutine(t *testing.T) {
 		New(time.Millisecond, func(_ time.Time) {}).Stop()
 	}
 
-	time.Sleep(10 * time.Millisecond)
-
 	if runtime.NumGoroutine() >= 1000 {
 		t.Fatal("goroutine leaked!!!")
 	}
@@ -32,4 +30,19 @@ func ExampleTicker() {
 	// ticked
 	// ticked
 	// ticked
+}
+
+func ExampleWaitingForCallbackFinished() {
+	t := New(10*time.Millisecond, func(_ time.Time) {
+		time.Sleep(100 * time.Millisecond)
+		fmt.Println("ticked")
+	})
+
+	time.Sleep(15 * time.Millisecond)
+	t.Stop()
+	fmt.Println("stopped")
+
+	// Output:
+	// ticked
+	// stopped
 }
